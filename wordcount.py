@@ -1,4 +1,4 @@
-//Rudimentary program that parses a text file and tallies up the wordcount for each word
+*//Rudimentary program that parses a text file and tallies up the wordcount for each word
 
 #filepath stored in variable 'file'
 file = '/Users/ron_two/Documents/python_work/practice.rtf'
