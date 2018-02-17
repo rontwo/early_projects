@@ -39,4 +39,4 @@ for word,count in counts.items():
 		bigcount = count
 
 #print most common word and total count
-print('The most common word is: "' + bigword + '" with a frequencey of: ' + str(bigcount) + ' occurences.')
+print('The most common word is: "' + bigword + '" with a frequency of: ' + str(bigcount) + ' occurences.')
