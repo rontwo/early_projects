@@ -24,7 +24,7 @@ for pop_dict in pop_data:
 	if code:
 		cc_populations[code] = population
 
-#Group countries into 3 population levels
+#Group countries into 3 population levels: <10,000,000 // >10,000,000 & <1,000,000,000 // >1,000,000,000
 cc_pops_1, cc_pops_2, cc_pops_3 = {}, {}, {}
 for cc, pop in cc_populations.items():
 	if pop < 10**7:
