@@ -1,6 +1,9 @@
 import csv
 import pandas as pd
 from send_email2 import send_mail
+from datetime import date
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 ### Definitions
 filename = "/Users/ron_two/Documents/projects/RLC/june2018_poundsrescued.csv"
@@ -26,7 +29,7 @@ with open(filename, 'r') as data:
 
 	for row in rescues_data:
 		volunteer, email, pounds, num_events = row[0], row[1], row[6], 1
-		rescue_obj = {'name': volunteer, 'email': email, 'total pounds': int(pounds), 'total events': 1} 
+		rescue_obj = {'name': volunteer, 'email': email, 'total pounds': int(pounds), 'total events': 1}
 
 		#If 'volunteer' is stored as a key in 'rescues', add 'pounds' and increment 'total events' by 1
 		if email in rescues.keys():
@@ -70,18 +73,37 @@ recipient_pounds = rescues_email[recipient]['total pounds']
 recipient_events = rescues_email[recipient]['total events']
 recipient_meals = int(recipient_pounds/1.2)
 
-greeting1 = "%s, We thought it might be interesting for you to see the impact your work with Rescuing Leftover Cuisine 
-had on your community. Below is the amount of food you saved & meals you served in June due to your commitment to help 
+#Create Message
+msg = MIMEMultipart('alternative')
+msg['Subject'] = "Your {d} Impact Report".format(d=date.today().strftime("%B %Y"))
+msg['From'] = send_from
+msg['To'] = recipient
+
+greeting1 = "%s, We thought it might be interesting for you to see the impact your work with Rescuing Leftover Cuisine
+had on your community. Below is the amount of food you saved & meals you served in June due to your commitment to help
 fight hunger:" % recipient_name
 
-greeting2 = "\nYou rescued %i pounds of food in June across %i events. This provided %i meals for the 
+greeting2 = "\nYou rescued %i pounds of food in June across %i events. This provided %i meals for the
 food insecure of NYC!" % (recipient_pounds, recipient_events, recipient_meals)
 
-stats = "\nWe rescued a total of %i pounds of food in June (%i meals). Thanks for being a part of the mission 
+stats = "\nWe rescued a total of %i pounds of food in June (%i meals). Thanks for being a part of the mission
 to end food waste!" % (total_pounds, int(total_pounds/1.2))
 
-message = "Subject: Your June 2018 Impact Report\nHello "+greeting1+greeting2+stats
+html = """\
+<html>
+  <head></head>
+  <body>
+    <p>Hello!<br>
+       {greeting1}<br>
+	   {greeting2}<br>
+	   {stats}<br>
+    </p>
+  </body>
+</html>
+""".format(**locals())
+msg.attach(MIMEText(html, 'html'))
+
 
 print("Sending email to %s" % recipient)
 password = input('password? ')
-email_status = send_mail(send_from, password, recipient, message)
+email_status = send_mail(send_from, password, recipient, msg.as_string())
