@@ -1,6 +1,6 @@
 import csv
 import pandas as pd
-from send_email2 import send_mail
+from rescues_methods import send_mail
 from datetime import date
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -61,12 +61,16 @@ print("Total Events: "+str(total_events))
 print("Total Active Volunteers: "+str(active_volunteers))
 print("Total Volunteers to Email: "+str(email_volunteers))
 
+
 #Login info
-send_from = 'email1'
+email1 = input('Send from? ')
+send_from = email1
+password = input('password? ')
 
 
 #Store recipient info
-recipient = 'email2'
+email2 = input('Send to? ')
+recipient = email2
 full_name = rescues_email[recipient]['name'].split()
 recipient_name = full_name[0]
 recipient_pounds = rescues_email[recipient]['total pounds']
@@ -79,23 +83,27 @@ msg['Subject'] = "Your {d} Impact Report".format(d=date.today().strftime("%B %Y"
 msg['From'] = send_from
 msg['To'] = recipient
 
-greeting1 = "%s, We thought it might be interesting for you to see the impact your work with Rescuing Leftover Cuisine
-had on your community. Below is the amount of food you saved & meals you served in June due to your commitment to help
-fight hunger:" % recipient_name
+#Email body
+greeting1 = "Hello %s!" % recipient_name
 
-greeting2 = "\nYou rescued %i pounds of food in June across %i events. This provided %i meals for the
-food insecure of NYC!" % (recipient_pounds, recipient_events, recipient_meals)
+greeting2 = '''We thought it might be interesting for you to see the impact your work with Rescuing Leftover 
+Cuisine had on your community. Below is the amount of food you saved & meals you served in June due to your commitment 
+to help fight hunger:'''
 
-stats = "\nWe rescued a total of %i pounds of food in June (%i meals). Thanks for being a part of the mission
-to end food waste!" % (total_pounds, int(total_pounds/1.2))
+greeting3 = '''\nYou rescued %i pounds of food in June across %i events. This provided %i meals for the
+food insecure of NYC!''' % (recipient_pounds, recipient_events, recipient_meals)
+
+stats = '''\nWe rescued a total of %i pounds of food in June (%i meals). Thanks for being a part of the mission
+to end food waste!''' % (total_pounds, int(total_pounds/1.2))
 
 html = """\
 <html>
   <head></head>
   <body>
-    <p>Hello!<br>
-       {greeting1}<br>
-	   {greeting2}<br>
+    <h1>{greeting1}</h1>
+    <p>
+       {greeting2}<br>
+	   {greeting3}<br>
 	   {stats}<br>
     </p>
   </body>
@@ -105,5 +113,4 @@ msg.attach(MIMEText(html, 'html'))
 
 
 print("Sending email to %s" % recipient)
-password = input('password? ')
 email_status = send_mail(send_from, password, recipient, msg.as_string())
