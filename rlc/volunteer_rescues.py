@@ -1,5 +1,4 @@
 import csv
-import pandas as pd
 from rescues_methods import send_mail
 from dateutil.relativedelta import relativedelta
 from datetime import date
