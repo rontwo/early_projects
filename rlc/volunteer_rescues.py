@@ -5,7 +5,7 @@ from datetime import date
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-### Definitions
+### Definitions; CSV pulled from RLC website via PostgreSQL (Mode Analytics)
 filename = "CSV_FILEPATH"
 total_pounds = 0
 total_events = 0
